@@ -1,5 +1,7 @@
-﻿namespace Hacs {
-    partial class MainForm {
+﻿namespace Hacs
+{
+    partial class HomeForm
+    {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -9,8 +11,10 @@
         ///  Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -22,7 +26,8 @@
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             components = new System.ComponentModel.Container();
             SuspendLayout();
             // 
@@ -31,9 +36,9 @@
             AutoScaleDimensions = new SizeF(18F, 39F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Name = "MainForm";
+            Name = "HomeForm";
             Text = "Hacs";
-            Load += MainForm_Load;
+            Load += HomeForm_Load;
             ResumeLayout(false);
         }
 

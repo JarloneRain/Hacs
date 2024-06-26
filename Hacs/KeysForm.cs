@@ -32,15 +32,14 @@ class HexButton : Button
 
         Graphics g = pevent.Graphics;
         g.SmoothingMode = SmoothingMode.AntiAlias;
-
         g.FillPolygon(new SolidBrush(BackColor), hexPoints);
+        g.DrawPolygon(new Pen(ForeColor, 10), hexPoints);
 
         g.DrawString(Text, Font, new SolidBrush(ForeColor), ClientRectangle, new StringFormat
         {
             Alignment = StringAlignment.Center,
             LineAlignment = StringAlignment.Center
         });
-        //base.OnPaint(pevent);
     }
 }
 
@@ -48,10 +47,11 @@ public partial class KeysForm : Form
 {
     public const int Length = 1000;
 
-    readonly HexTriangleEnum HexTriangle;
+    readonly HexTriangleEnum hexTriangle;
 
     Button[] buttons = [];
     readonly ToolTip toolTip = new();
+    string sentKeys = "";
     public KeysForm(HexTriangleEnum hexTriangle)
     {
         InitializeComponent();
@@ -60,16 +60,16 @@ public partial class KeysForm : Form
         BackColor = Color.White;
         TransparencyKey = Color.White;
         TopMost = true;
-        Opacity = 0.5;
+        Opacity = 0.75;
 
-        HexTriangle = hexTriangle;
+        this.hexTriangle = hexTriangle;
 
         InitButtons();
     }
 
     void InitButtons()
     {
-        TriangleConfig triangleConfig = Program.KeysConfig[HexTriangle];
+        TriangleConfig triangleConfig = Program.KeysConfig[hexTriangle];
         KeyConfig[] keys = triangleConfig.KeyConfigs;
         Log($"KeysConfig: {JsonSerializer.Serialize(keys)}");
         buttons = new Button[keys.Length];
@@ -81,22 +81,30 @@ public partial class KeysForm : Form
                 Width = 200,
                 Height = 100,
                 Text = key.Keys,
-                Font = new Font("Arial", 30),
+                Font = new Font("Arial", 25),
                 ForeColor = Color.White,
-                BackColor = HexForm.TriangleDict[HexTriangle].Brush.Color,
+                BackColor = HexForm.TriangleDict[hexTriangle].Brush.Color,
                 Location = key.Location
             };
             buttons[i].Click += (_, _) =>
             {
-                MessageBox.Show($"{triangleConfig.ModifierKeysText}+{key.Keys}\n{key.Description}");
+                sentKeys = $"{triangleConfig.ModifierKeys.ToKeyString()}({key.Keys})";
+                Log($"Send keys soon: {sentKeys}");
+                Close();
+                Log($"Cloth KeysForm");
             };
             toolTip.SetToolTip(buttons[i], key.Description);
             Controls.Add(buttons[i]);
         }
     }
 
-    private void KeysForm_Load(object sender, EventArgs e)
-    {
+    private void KeysForm_Load(object sender, EventArgs e) { }
 
+    protected override void OnFormClosed(FormClosedEventArgs e)
+    {
+        base.OnFormClosed(e);
+        Log($"KeysForm closed.");
+        SendKeys.Send(sentKeys);
+        Log($"Have sent keys: {sentKeys}");
     }
 }

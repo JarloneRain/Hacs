@@ -9,12 +9,4 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="resources\icon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="resources\icon.ico" />
-  </ItemGroup>
-
 </Project>

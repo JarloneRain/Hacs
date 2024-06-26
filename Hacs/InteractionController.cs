@@ -61,7 +61,7 @@ public class InteractionController
         var angle = Math.Atan2(y - rDownPos.Y, x - rDownPos.X) * (180 / Math.PI);
         angle = (angle + 360) % 360;
         hexForm.CurrentDrawingTriangle = (HexTriangleEnum)(int)(angle / 60);
-        Log($"CurrentDrawingTriangle: {hexForm.CurrentDrawingTriangle}");
+
     }
 
     public void OnRDown(int x, int y)
@@ -84,5 +84,7 @@ public class InteractionController
         keysForm = new KeysForm((HexTriangleEnum)(int)(angle / 60));
         keysForm.Show();
         keysForm.Location = new(x - keysForm.Width / 2, y - keysForm.Height / 2);
+        Log($"Showed KeysForm at {keysForm.Location}");
+        keysForm.Activate();
     }
 }

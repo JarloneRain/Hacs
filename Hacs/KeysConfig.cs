@@ -16,6 +16,22 @@ enum ModifierKeyEnum
     Alt = 4
 }
 
+static class ModifierKeyEnumExtension
+{
+    public static string ToKeyString(this ModifierKeyEnum mkey) => mkey switch
+    {
+        ModifierKeyEnum.None => "",
+        ModifierKeyEnum.Shift => "+",
+        ModifierKeyEnum.Ctrl => "^",
+        ModifierKeyEnum.Alt => "%",
+        _ => throw new NotImplementedException()
+    };
+    public static string ToKeyString(this uint mkeys) => string.Join("",
+        Enum.GetValues<ModifierKeyEnum>()
+        .Where(mkey => (mkeys & (uint)mkey) != 0)
+        .Select(mkey => mkey.ToKeyString()));
+}
+
 class KeyConfig
 {
     public string Keys { get; set; } = "";

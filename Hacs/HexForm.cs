@@ -39,7 +39,7 @@ public partial class HexForm : Form
             if(value == curDrawTri) return;
             curDrawTri = value;
             Refresh();
-            Log($"HexForm redraw the {curDrawTri}");
+            Log($"HexForm draw the {curDrawTri}");
         }
     }
 
@@ -51,7 +51,7 @@ public partial class HexForm : Form
         BackColor = Color.Black;
         TransparencyKey = Color.Black;
         TopMost = true;
-        Opacity = 0.5;
+        Opacity = 0.25;
 
         Paint += (_, e) =>
         {
@@ -76,6 +76,4 @@ public partial class HexForm : Form
         //};
         //timer.Start();
     }
-
-
 }

@@ -1,11 +1,13 @@
 namespace Hacs;
 
-internal static class Program {
+internal static class Program
+{
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main() {
+    static void Main()
+    {
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
@@ -13,7 +15,7 @@ internal static class Program {
 #if DEBUG
         new LogForm().Show();
 #endif
-        Application.Run(new MainForm());
+        Application.Run(new HomeForm());
     }
     #region log
     static readonly Logger logger = new();
@@ -23,7 +25,8 @@ internal static class Program {
     static readonly InteractionController ic = new();
     #endregion
     #region mouse
-    static void InitMouse() {
+    static void InitMouse()
+    {
         MouseHooker.MouseMove += mouseInfo => Log($"MouseMove: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
         MouseHooker.RightButtonDown += mouseInfo => Log($"RButtonDown: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
         MouseHooker.RightButtonUp += mouseInfo => Log($"RButtonUp: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
