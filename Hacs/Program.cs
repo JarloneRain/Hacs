@@ -17,6 +17,10 @@ internal static class Program
 #endif
         Application.Run(new HomeForm());
     }
+    #region keys
+    public static readonly KeysConfig KeysConfig = new();
+    #endregion
+
     #region log
     static readonly Logger logger = new();
     public static void Log(string message) => logger.Log(message);
@@ -27,19 +31,29 @@ internal static class Program
     #region mouse
     static void InitMouse()
     {
-        MouseHooker.MouseMove += mouseInfo => Log($"MouseMove: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
-        MouseHooker.RightButtonDown += mouseInfo => Log($"RButtonDown: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
-        MouseHooker.RightButtonUp += mouseInfo => Log($"RButtonUp: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
+        MouseHooker.MouseMove += mouseInfo =>
+        {
+            Log($"MouseMove: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
+            ic.OnMouseMove(mouseInfo.pt.x, mouseInfo.pt.y);
+            return false;
+        };
 
-        MouseHooker.MiddleButtonUp += _ => new HexForm().Show();
-        MouseHooker.MouseMove += mouseInfo => ic.OnMouseMove(mouseInfo.pt.x, mouseInfo.pt.y);
-        MouseHooker.RightButtonDown += mouseInfo => ic.OnRDown(mouseInfo.pt.x, mouseInfo.pt.y);
-        MouseHooker.RightButtonUp += mouseInfo => ic.OnRUp(mouseInfo.pt.x, mouseInfo.pt.y);
+        MouseHooker.RightButtonDown += mouseInfo =>
+        {
+            Log($"RButtonDown: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
+            ic.OnRDown(mouseInfo.pt.x, mouseInfo.pt.y);
+            return false;
+        };
+
+        MouseHooker.RightButtonUp += mouseInfo =>
+        {
+            Log($"RButtonUp: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
+            ic.OnRUp(mouseInfo.pt.x, mouseInfo.pt.y);
+            return false;
+        };
 
         MouseHooker.Start();
     }
     #endregion
-    #region keys
-    public static readonly KeysConfig KeysConfig = new();
-    #endregion
+
 }

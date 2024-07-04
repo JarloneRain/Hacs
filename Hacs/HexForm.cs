@@ -19,15 +19,14 @@ public partial class HexForm : Form
 
     public const int Length = 600;
 
-    public static readonly Dictionary<HexTriangleEnum, (SolidBrush Brush, PointF[] Points)> TriangleDict = new()
+    public static readonly Dictionary<HexTriangleEnum, Color> TriangleColor = new()
     {
-        [HexTriangleEnum.UR] = (new(Color.Yellow), [new(300, 300), new(450, 40), new(600, 300)]),
-        [HexTriangleEnum.U_] = (new(Color.Red), [new(300, 300), new(150, 40), new(450, 40)]),
-        [HexTriangleEnum.UL] = (new(Color.Magenta), [new(300, 300), new(0, 300), new(150, 40)]),
-        [HexTriangleEnum.DL] = (new(Color.Blue), [new(300, 300), new(150, 560), new(0, 300)]),
-        [HexTriangleEnum.D_] = (new(Color.Cyan), [new(300, 300), new(450, 560), new(150, 560)]),
-        [HexTriangleEnum.DR] = (new(Color.Green), [new(300, 300), new(600, 300), new(450, 560)]),
-
+        [HexTriangleEnum.DR] = Color.Green,
+        [HexTriangleEnum.D_] = Color.Cyan,
+        [HexTriangleEnum.DL] = Color.Blue,
+        [HexTriangleEnum.UL] = Color.Magenta,
+        [HexTriangleEnum.U_] = Color.Red,
+        [HexTriangleEnum.UR] = Color.Yellow,
     };
 
     HexTriangleEnum curDrawTri = HexTriangleEnum.U_;
@@ -57,8 +56,15 @@ public partial class HexForm : Form
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            var curTri = TriangleDict[curDrawTri];
-            g.FillPolygon(curTri.Brush, curTri.Points);
+            var curTriAngleS = Math.PI * (int)curDrawTri / 3;
+            var curTriAngleE = curTriAngleS + Math.PI / 3;
+            var radius = Length / 2;
+            g.FillPolygon(new SolidBrush(TriangleColor[curDrawTri]), new PointF[]
+            {
+                new (radius,radius),
+                new (radius+radius*(float)Math.Cos(curTriAngleS),radius+radius*(float)Math.Sin(curTriAngleS)),
+                new (radius+radius*(float)Math.Cos(curTriAngleE),radius + radius *(float) Math.Sin(curTriAngleE))
+            });
         };
     }
 

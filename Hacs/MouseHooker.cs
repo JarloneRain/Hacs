@@ -9,10 +9,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-internal delegate void MouseEventHandler(MSLLHOOKSTRUCT mouseInfo);
+internal delegate bool MouseEventHandler(MSLLHOOKSTRUCT mouseInfo);
 
 [StructLayout(LayoutKind.Sequential)]
-struct MSLLHOOKSTRUCT {
+struct MSLLHOOKSTRUCT
+{
     public POINT pt;
     public int mouseData;
     public int flags;
@@ -21,11 +22,13 @@ struct MSLLHOOKSTRUCT {
 }
 
 [StructLayout(LayoutKind.Sequential)]
-struct POINT {
+struct POINT
+{
     public int x;
     public int y;
 }
-static partial class MouseHooker {
+static partial class MouseHooker
+{
 
     #region outer
     public static event MouseEventHandler? MouseMove;
@@ -50,12 +53,14 @@ static partial class MouseHooker {
 
     static bool isHooking = false;
 
-    public static void Start() {
-        if (isHooking || hookId != IntPtr.Zero) return;
+    public static void Start()
+    {
+        if(isHooking || hookId != IntPtr.Zero) return;
 
         proc = new LowLevelMouseProc(HookCallback);
         hookId = SetWindowsHookEx(WH_MOUSE_LL, proc, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
-        if (hookId == IntPtr.Zero) {
+        if(hookId == IntPtr.Zero)
+        {
             Program.Log("Failed to set hook");
             return;
         }
@@ -63,10 +68,12 @@ static partial class MouseHooker {
 
     }
 
-    public static void Stop() {
-        if (!isHooking || hookId == IntPtr.Zero) return;
+    public static void Stop()
+    {
+        if(!isHooking || hookId == IntPtr.Zero) return;
 
-        if (!UnhookWindowsHookEx(hookId)) {
+        if(!UnhookWindowsHookEx(hookId))
+        {
             Program.Log("Failed to unhook");
             return;
         }
@@ -74,10 +81,13 @@ static partial class MouseHooker {
         isHooking = false;
     }
 
-    private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) {
-        if (nCode >= 0) {
+    private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if(nCode >= 0)
+        {
             MSLLHOOKSTRUCT mouseInfo = Marshal.PtrToStructure<MSLLHOOKSTRUCT>(lParam);
-            switch ((MouseMessages)wParam) {
+            switch((MouseMessages)wParam)
+            {
                 case MouseMessages.WM_MOUSEMOVE:
                     MouseMove?.Invoke(mouseInfo);
                     break;
@@ -123,7 +133,8 @@ static partial class MouseHooker {
     }
 
 
-    public enum MouseMessages {
+    public enum MouseMessages
+    {
         WM_MOUSEMOVE = 0x0200,
         WM_LBUTTONDOWN = 0x0201,
         WM_LBUTTONUP = 0x0202,

@@ -18,6 +18,7 @@ public class InteractionController
 {
     HexForm? hexForm;
     KeysForm? keysForm;
+
     public bool IsRHolding { get; set; } = false;
     Point rDownPos = new(0, 0);
 
@@ -31,37 +32,16 @@ public class InteractionController
         if(hexForm == null)
         {
             hexForm = new HexForm();
-            /// I attempted to set the Location when creating the hexForm,
-            /// but the window's location did not match my expectations.
-            /// I performed many actions similar to those described below, but all attempts failed.
-            /// I suspected that the "Show" method might adjust the location,
-            /// but found nothing about this in the documentation.
-            /// Currently, the hexForm can only be displayed correctly on the main screen.
-            //{ Location = new Point(rDownPos.X - 300, rDownPos.Y - 300) };
-            //Log($"Create HexForm at {hexForm.Location}");
-            //Graphics g = hexForm.CreateGraphics();
-            //Log($"DPI:{g.DpiX},{g.DpiY}");
-            //hexForm.Location = new Point(rDownPos.X - 300, rDownPos.Y - 300);
-            //Log($"Location:{hexForm.Location}");
-            //Log($"new X=X*d.DpiX/96={hexForm.Location.X}*{g.DpiX}/96={hexForm.Location.X * g.DpiX / 96}");
-            //Log($"new Y=Y*d.DpiY/96={hexForm.Location.Y}*{g.DpiY}/96={hexForm.Location.Y * g.DpiY / 96}");
-            //var p = new Point {
-            //    X = (int)(hexForm.Location.X * g.DpiX / 96),
-            //    Y = (int)(hexForm.Location.Y * g.DpiY / 96),
-            //};
-            //Log($"Calculated by DPI {p}");
-            //hexForm.Location = p;
-            //Log($"Adjust HexForm to {hexForm.Location}");
-
             hexForm.Show();
-            hexForm.Location = new Point(rDownPos.X - 300, rDownPos.Y - 300);
+            hexForm.Location = new Point(rDownPos.X - Length / 2, rDownPos.Y - Length / 2);
             Log($"Showed HexForm at {hexForm.Location}");
         }
-
-        var angle = Math.Atan2(y - rDownPos.Y, x - rDownPos.X) * (180 / Math.PI);
-        angle = (angle + 360) % 360;
-        hexForm.CurrentDrawingTriangle = (HexTriangleEnum)(int)(angle / 60);
-
+        else
+        {
+            var angle = Math.Atan2(y - rDownPos.Y, x - rDownPos.X) * (180 / Math.PI);
+            angle = (angle + 360) % 360;
+            hexForm.CurrentDrawingTriangle = (HexTriangleEnum)(int)(angle / 60);
+        }
     }
 
     public void OnRDown(int x, int y)
@@ -75,16 +55,12 @@ public class InteractionController
     {
         IsRHolding = false;
         if(hexForm == null) return;
-
+        keysForm = new KeysForm(hexForm.CurrentDrawingTriangle);
         hexForm.Close();
         hexForm = null;
-
-        var angle = Math.Atan2(y - rDownPos.Y, x - rDownPos.X) * (180 / Math.PI);
-        angle = (angle + 360) % 360;
-        keysForm = new KeysForm((HexTriangleEnum)(int)(angle / 60));
         keysForm.Show();
         keysForm.Location = new(x - keysForm.Width / 2, y - keysForm.Height / 2);
         Log($"Showed KeysForm at {keysForm.Location}");
-        keysForm.Activate();
+        //keysForm.Activate();
     }
 }

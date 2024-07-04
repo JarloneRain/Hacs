@@ -4,6 +4,10 @@ using System.ComponentModel;
 
 public partial class HomeForm : Form
 {
+    Button button = new Button
+    {
+        Text = "Test keysForm"
+    };
     private readonly Icon hacsIcon;
     public HomeForm()
     {
@@ -26,6 +30,8 @@ public partial class HomeForm : Form
             }
         };
 
+        button.Click += (_, _) => new KeysForm(HexTriangleEnum.DL).Show();
+        Controls.Add(button);
     }
 
 

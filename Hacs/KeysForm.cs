@@ -49,9 +49,11 @@ public partial class KeysForm : Form
 
     readonly HexTriangleEnum hexTriangle;
 
+    uint modifierKeys;
+    List<Keys>? keySeq;
+
     Button[] buttons = [];
     readonly ToolTip toolTip = new();
-    string sentKeys = "";
     public KeysForm(HexTriangleEnum hexTriangle)
     {
         InitializeComponent();
@@ -83,15 +85,24 @@ public partial class KeysForm : Form
                 Text = key.Keys,
                 Font = new Font("Arial", 25),
                 ForeColor = Color.White,
-                BackColor = HexForm.TriangleDict[hexTriangle].Brush.Color,
+                BackColor = HexForm.TriangleColor[hexTriangle],
                 Location = key.Location
             };
             buttons[i].Click += (_, _) =>
             {
-                sentKeys = $"{triangleConfig.ModifierKeys.ToKeyString()}({key.Keys})";
-                Log($"Send keys soon: {sentKeys}");
+                modifierKeys = triangleConfig.ModifierKeys;
+                keySeq = key.KeySeq;
+
+                new Thread(new ThreadStart(() =>
+                {
+                    // Wait for the window to close and return focus.
+                    Thread.Sleep(250);
+                    KeyboardMessage.SendCombinationKeys(modifierKeys, keySeq);
+                    Log($"Have sent keys: {string.Join(", ", keySeq)}");
+                })).Start();
+
                 Close();
-                Log($"Cloth KeysForm");
+                Log($"Close KeysForm");
             };
             toolTip.SetToolTip(buttons[i], key.Description);
             Controls.Add(buttons[i]);
@@ -100,11 +111,4 @@ public partial class KeysForm : Form
 
     private void KeysForm_Load(object sender, EventArgs e) { }
 
-    protected override void OnFormClosed(FormClosedEventArgs e)
-    {
-        base.OnFormClosed(e);
-        Log($"KeysForm closed.");
-        SendKeys.Send(sentKeys);
-        Log($"Have sent keys: {sentKeys}");
-    }
 }

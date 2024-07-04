@@ -35,6 +35,7 @@ static class ModifierKeyEnumExtension
 class KeyConfig
 {
     public string Keys { get; set; } = "";
+    public List<Keys> KeySeq { get; set; } = [];
     public int OffsetX { get; set; }
     public int OffsetY { get; set; }
     public string Description { get; set; } = "";
@@ -79,16 +80,16 @@ class KeysConfig
 [
     {"ModifierKeys":4,"KeyConfigs":[]},
     {"ModifierKeys":6,"KeyConfigs":[
-        {"Keys": "A", "OffsetX": 0, "OffsetY": 0, "Description": "Screenshot by Tencent QQ"}
+        {"Keys": "A","KeySeq":[65], "OffsetX": 0, "OffsetY": 0, "Description": "Screenshot by Tencent QQ"}
     ]},
     {"ModifierKeys":2,"KeyConfigs":[
-        {"Keys":"A","OffsetX":0,"OffsetY":200,"Description":"Select all."},
-        {"Keys":"KF","OffsetX":-300,"OffsetY":0,"Description":"Formatting in Visual Studio."},
-        {"Keys":"C","OffsetX":0,"OffsetY":-300,"Description":"Copy."},
-        {"Keys":"V","OffsetX":0,"OffsetY":-200,"Description":"Paste."},
-        {"Keys":"X","OffsetX":0,"OffsetY":-100,"Description":"Cut."},
-        {"Keys":"Y","OffsetX":150,"OffsetY":-250,"Description":"Redo."},
-        {"Keys":"Z","OffsetX":150,"OffsetY":-150,"Description":"Undo."}
+        {"Keys":"A","KeySeq":[65], "OffsetX":0,"OffsetY":200,"Description":"Select all."},
+        {"Keys":"KF","KeySeq":[75, 70], "OffsetX":-300, "OffsetY":0, "Description":"Formatting in Visual Studio."},
+        {"Keys":"C","KeySeq":[67], "OffsetX":0, "OffsetY":-300,"Description":"Copy."},
+        {"Keys":"V","KeySeq":[86], "OffsetX":0, "OffsetY":-200,"Description":"Paste."},
+        {"Keys":"X","KeySeq":[88], "OffsetX":0, "OffsetY":-100,"Description":"Cut."},
+        {"Keys":"Y","KeySeq":[89], "OffsetX":150, "OffsetY":-250,"Description":"Redo."},
+        {"Keys":"Z","KeySeq":[90], "OffsetX":150, "OffsetY":-150,"Description":"Undo."}
     ]},
     {"ModifierKeys":3,"KeyConfigs":[]},
     {"ModifierKeys":1,"KeyConfigs":[]},
