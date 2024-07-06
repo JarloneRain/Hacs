@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Hacs.HexForm;
-using static Program;
+using static Logger;
 
 /// <summary>
 /// HexTriangleEnum represents the order of triangles in a hexagon,

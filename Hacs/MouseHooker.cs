@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-internal delegate bool MouseEventHandler(MSLLHOOKSTRUCT mouseInfo);
+internal delegate void MouseEventHandler(MSLLHOOKSTRUCT mouseInfo);
 
 [StructLayout(LayoutKind.Sequential)]
 struct MSLLHOOKSTRUCT
@@ -61,11 +61,10 @@ static partial class MouseHooker
         hookId = SetWindowsHookEx(WH_MOUSE_LL, proc, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
         if(hookId == IntPtr.Zero)
         {
-            Program.Log("Failed to set hook");
+            Logger.Log("Failed to hook.");
             return;
         }
         isHooking = true;
-
     }
 
     public static void Stop()
@@ -74,7 +73,7 @@ static partial class MouseHooker
 
         if(!UnhookWindowsHookEx(hookId))
         {
-            Program.Log("Failed to unhook");
+            Logger.Log("Failed to unhook");
             return;
         }
         hookId = IntPtr.Zero;
@@ -125,7 +124,7 @@ static partial class MouseHooker
                     MouseHWheel?.Invoke(mouseInfo);
                     break;
                 default:
-                    Program.Log($"Unknown mouse event: wParam={wParam}, lParam={lParam}");
+                    Logger.Log($"Unknown mouse event: wParam={wParam}, lParam={lParam}");
                     break;
             }
         }

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
-using static Program;
+using static Logger;
 using System.Drawing.Drawing2D;
 
 class HexButton : Button

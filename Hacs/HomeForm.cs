@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 public partial class HomeForm : Form
 {
-    Button button = new Button
+    Button button = new()
     {
         Text = "Test keysForm"
     };
@@ -40,10 +40,35 @@ public partial class HomeForm : Form
     private ContextMenuStrip iconMenuStrip;
     void InitNotifyIcon()
     {
+        var @switch = new ToolStripMenuItem("Stop", null);
+        @switch.Click += (_, _) =>
+        {
+            if(Program.IsActive)
+            {
+                Program.IsActive = false;
+                @switch.Text = "Open";
+                // TODO
+                Logger.Log("Stop");
+            }
+            else
+            {
+                Program.IsActive = true;
+                @switch.Text = "Stop";
+                // TODO
+                Logger.Log("Open");
+            }
+        };
+
         iconMenuStrip = new ContextMenuStrip(components);
+        iconMenuStrip.Items.Add(@switch);
+        iconMenuStrip.Items.Add(new ToolStripSeparator());
         iconMenuStrip.Items.Add(new ToolStripMenuItem("Home", null, (_, _) => ShowHome()));
         iconMenuStrip.Items.Add(new ToolStripMenuItem("Logs", null, (_, _) => new LogForm().Show()));
+        iconMenuStrip.Items.Add(new ToolStripSeparator());
         iconMenuStrip.Items.Add(new ToolStripMenuItem("Exit", null, (_, _) => Application.Exit()));
+        // Set the fxxking font to monospaced
+        foreach(ToolStripItem item in iconMenuStrip.Items)
+            item.Font = new Font("Consolas", 9, FontStyle.Regular);
 
         notifyIcon = new NotifyIcon(components)
         {

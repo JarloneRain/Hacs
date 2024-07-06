@@ -1,5 +1,6 @@
 namespace Hacs;
 
+using static Logger;
 internal static class Program
 {
     /// <summary>
@@ -17,13 +18,11 @@ internal static class Program
 #endif
         Application.Run(new HomeForm());
     }
+
+    public static bool IsActive { get; set; } = true;
+
     #region keys
     public static readonly KeysConfig KeysConfig = new();
-    #endregion
-
-    #region log
-    static readonly Logger logger = new();
-    public static void Log(string message) => logger.Log(message);
     #endregion
     #region intraction
     static readonly InteractionController ic = new();
@@ -35,21 +34,18 @@ internal static class Program
         {
             Log($"MouseMove: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
             ic.OnMouseMove(mouseInfo.pt.x, mouseInfo.pt.y);
-            return false;
         };
 
         MouseHooker.RightButtonDown += mouseInfo =>
         {
             Log($"RButtonDown: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
             ic.OnRDown(mouseInfo.pt.x, mouseInfo.pt.y);
-            return false;
         };
 
         MouseHooker.RightButtonUp += mouseInfo =>
         {
             Log($"RButtonUp: {mouseInfo.pt.x}, {mouseInfo.pt.y}");
             ic.OnRUp(mouseInfo.pt.x, mouseInfo.pt.y);
-            return false;
         };
 
         MouseHooker.Start();
