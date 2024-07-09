@@ -4,10 +4,6 @@ using System.ComponentModel;
 
 public partial class HomeForm : Form
 {
-    Button button = new()
-    {
-        Text = "Test keysForm"
-    };
     private readonly Icon hacsIcon;
     public HomeForm()
     {
@@ -29,11 +25,7 @@ public partial class HomeForm : Form
                 ShowInTaskbar = false;
             }
         };
-
-        button.Click += (_, _) => new KeysForm(HexTriangleEnum.DL).Show();
-        Controls.Add(button);
     }
-
 
     #region notify icon
     private NotifyIcon notifyIcon;
@@ -47,14 +39,12 @@ public partial class HomeForm : Form
             {
                 Program.IsActive = false;
                 @switch.Text = "Open";
-                // TODO
                 Logger.Log("Stop");
             }
             else
             {
                 Program.IsActive = true;
                 @switch.Text = "Stop";
-                // TODO
                 Logger.Log("Open");
             }
         };

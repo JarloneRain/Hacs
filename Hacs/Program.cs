@@ -19,7 +19,21 @@ internal static class Program
         Application.Run(new HomeForm());
     }
 
-    public static bool IsActive { get; set; } = true;
+    #region IsActive
+    static bool isActive = true;
+    public static bool IsActive
+    {
+        get => isActive;
+        set
+        {
+            isActive = value;
+            if(isActive)
+                MouseHooker.Start();
+            else
+                MouseHooker.Stop();
+        }
+    }
+    #endregion
 
     #region keys
     public static readonly KeysConfig KeysConfig = new();

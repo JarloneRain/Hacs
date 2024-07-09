@@ -49,9 +49,6 @@ public partial class KeysForm : Form
 
     readonly HexTriangleEnum hexTriangle;
 
-    uint modifierKeys;
-    List<Keys>? keySeq;
-
     Button[] buttons = [];
     readonly ToolTip toolTip = new();
     public KeysForm(HexTriangleEnum hexTriangle)
@@ -90,15 +87,11 @@ public partial class KeysForm : Form
             };
             buttons[i].Click += (_, _) =>
             {
-                modifierKeys = triangleConfig.ModifierKeys;
-                keySeq = key.KeySeq;
-
                 new Thread(new ThreadStart(() =>
                 {
-                    // Wait for the window to close and return focus.
                     Thread.Sleep(250);
-                    KeyboardMessage.SendCombinationKeys(modifierKeys, keySeq);
-                    Log($"Have sent keys: {string.Join(", ", keySeq)}");
+                    KeyboardMessage.SendInputs(key.Inputs);
+                    Log($"Have sent keys:{triangleConfig.ModifierKeysText}+{key.Keys}");
                 })).Start();
 
                 Close();

@@ -13,7 +13,6 @@ using System.Windows.Forms;
 
 using static Logger;
 
-
 public partial class HexForm : Form
 {
 

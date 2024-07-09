@@ -19,5 +19,4 @@ static class Logger
 
     public static void Log(string message) =>
         File.AppendAllText(LogPath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff)} {message}{Environment.NewLine}");
-
 }
