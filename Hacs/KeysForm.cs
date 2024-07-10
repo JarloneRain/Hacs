@@ -15,6 +15,13 @@ using System.Drawing.Drawing2D;
 
 class HexButton : Button
 {
+    public const int DefaultWidth = 200;
+    public const int DefaultHeight = 100;
+    public HexButton() : base()
+    {
+        Width = DefaultWidth;
+        Height = DefaultHeight;
+    }
     protected override void OnPaint(PaintEventArgs pevent)
     {
         Point[] hexPoints = [
@@ -43,12 +50,41 @@ class HexButton : Button
     }
 }
 
+class RhombusButton : Button
+{
+    public const int DefaultWidth = 100;
+    public const int DefaultHeight = 100;
+    public RhombusButton() : base()
+    {
+        Width = DefaultWidth;
+        Height = DefaultHeight;
+    }
+    protected override void OnPaint(PaintEventArgs pevent)
+    {
+        Point[] rhoPoints = [
+            new Point(Width / 2, 0),
+            new Point(Width, Height / 2),
+            new Point(Width / 2, Height),
+            new Point(0, Height / 2)
+        ];
+
+        GraphicsPath rhoPath = new();
+        rhoPath.AddPolygon(rhoPoints);
+        Region = new Region(rhoPath);
+
+        Graphics g = pevent.Graphics;
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        g.FillPolygon(new SolidBrush(BackColor), rhoPoints);
+        g.DrawPolygon(new Pen(ForeColor, 10), rhoPoints);
+    }
+}
+
 public partial class KeysForm : Form
 {
     public const int Length = 1000;
 
     readonly HexTriangleEnum hexTriangle;
-
+    readonly Button closeButton;
     Button[] buttons = [];
     readonly ToolTip toolTip = new();
     public KeysForm(HexTriangleEnum hexTriangle)
@@ -62,6 +98,15 @@ public partial class KeysForm : Form
         Opacity = 0.75;
 
         this.hexTriangle = hexTriangle;
+
+        closeButton = new RhombusButton()
+        {
+            ForeColor = Color.White,
+            BackColor = HexForm.TriangleColor[hexTriangle],
+            Location = new Point(Length / 2 - RhombusButton.DefaultWidth / 2, Length / 2 - RhombusButton.DefaultHeight / 2)
+        };
+        closeButton.Click += (_, _) => Close();
+        Controls.Add(closeButton);
 
         InitButtons();
     }
@@ -77,10 +122,8 @@ public partial class KeysForm : Form
             var key = keys[i];
             buttons[i] = new HexButton()
             {
-                Width = 200,
-                Height = 100,
                 Text = key.Keys,
-                Font = new Font("Arial", 25),
+                Font = new Font("Consolas", 20, FontStyle.Bold),
                 ForeColor = Color.White,
                 BackColor = HexForm.TriangleColor[hexTriangle],
                 Location = key.Location
@@ -89,6 +132,7 @@ public partial class KeysForm : Form
             {
                 new Thread(new ThreadStart(() =>
                 {
+                    // Wait for the window to close and return focus.
                     Thread.Sleep(250);
                     KeyboardMessage.SendInputs(key.Inputs);
                     Log($"Have sent keys:{triangleConfig.ModifierKeysText}+{key.Keys}");

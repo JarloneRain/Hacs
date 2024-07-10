@@ -188,6 +188,9 @@ static partial class InputsGenerator
     }
 }
 
+/// <summary>
+/// The offset X or Y is relative to the center of the hexagon.
+/// </summary>
 class KeyConfig
 {
     public INPUT[] Inputs = [];
@@ -200,7 +203,11 @@ class KeyConfig
     public int OffsetY { get; set; }
     public string Description { get; set; } = "";
     [JsonIgnore]
-    public Point Location => new(OffsetX + KeysForm.Length / 2, OffsetY + KeysForm.Length / 2);
+    public Point Location => new()
+    {
+        X = OffsetX + KeysForm.Length / 2 - HexButton.DefaultWidth / 2,
+        Y = OffsetY + KeysForm.Length / 2 - HexButton.DefaultHeight / 2
+    };
 }
 
 class TriangleConfig
@@ -248,21 +255,22 @@ class KeysConfig
 [
     {"ModifierKeys":4,"KeyConfigs":[]},
     {"ModifierKeys":6,"KeyConfigs":[
-        {"Keys": "A", "OffsetX": 0, "OffsetY": 0, "Description": "Screenshot by Tencent QQ"}
+        {"Keys": "A", "OffsetX": -200, "OffsetY": 50, "Description": "Screenshot by Tencent QQ"}
     ]},
     {"ModifierKeys":2,"KeyConfigs":[
-        {"Keys":"A", "OffsetX":0,"OffsetY":200,"Description":"Select all."},
-        {"Keys":"KF", "OffsetX":-300, "OffsetY":0, "Description":"Formatting in Visual Studio."},
-        {"Keys":"C", "OffsetX":0, "OffsetY":-300,"Description":"Copy."},
-        {"Keys":"V", "OffsetX":0, "OffsetY":-200,"Description":"Paste."},
-        {"Keys":"X", "OffsetX":0, "OffsetY":-100,"Description":"Cut."},
-        {"Keys":"Y", "OffsetX":150, "OffsetY":-250,"Description":"Redo."},
-        {"Keys":"Z", "OffsetX":150, "OffsetY":-150,"Description":"Undo."}
+        {"Keys":"A", "OffsetX":100,"OffsetY":250,"Description":"Select all."},
+        {"Keys":"KF", "OffsetX":-200, "OffsetY":50, "Description":"Formatting in Visual Studio."},
+        {"Keys":"C", "OffsetX":100, "OffsetY":-250,"Description":"Copy."},
+        {"Keys":"V", "OffsetX":100, "OffsetY":-150,"Description":"Paste."},
+        {"Keys":"X", "OffsetX":100, "OffsetY":-50,"Description":"Cut."},
+        {"Keys":"Y", "OffsetX":250, "OffsetY":-200,"Description":"Redo."},
+        {"Keys":"Z", "OffsetX":250, "OffsetY":-100,"Description":"Undo."}
     ]},
     {"ModifierKeys":3,"KeyConfigs":[]},
     {"ModifierKeys":1,"KeyConfigs":[]},
     {"ModifierKeys":5,"KeyConfigs":[]}
 ]
 """;
+
 
 }
