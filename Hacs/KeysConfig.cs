@@ -137,7 +137,7 @@ static partial class InputsGenerator
         [
             ..modifierKey.Select(mkey => new INPUT
             {
-                type =KeyboardMessage. INPUT_KEYBOARD,
+                type =InputMessage. INPUT_KEYBOARD,
                 U = new InputUnion
                 {
                     ki = new KEYBDINPUT
@@ -150,7 +150,7 @@ static partial class InputsGenerator
             {
                 new ()
                 {
-                    type = KeyboardMessage.INPUT_KEYBOARD,
+                    type = InputMessage.INPUT_KEYBOARD,
                     U = new InputUnion
                     {
                         ki = new KEYBDINPUT
@@ -161,26 +161,26 @@ static partial class InputsGenerator
                 },
                 new ()
                 {
-                    type = KeyboardMessage.INPUT_KEYBOARD,
+                    type = InputMessage.INPUT_KEYBOARD,
                     U = new InputUnion
                     {
                         ki = new KEYBDINPUT
                         {
                             wVk = (ushort)key,
-                            dwFlags = KeyboardMessage.KEYEVENTF_KEYUP
+                            dwFlags = InputMessage.KEYEVENTF_KEYUP
                         }
                     }
                 }
             }),
             ..modifierKey.Select(mkey => new INPUT
             {
-                type = KeyboardMessage.INPUT_KEYBOARD,
+                type = InputMessage.INPUT_KEYBOARD,
                 U = new InputUnion
                 {
                     ki = new KEYBDINPUT
                     {
                         wVk = (ushort)mkey,
-                        dwFlags = KeyboardMessage.KEYEVENTF_KEYUP
+                        dwFlags = InputMessage.KEYEVENTF_KEYUP
                     }
                 }
             })

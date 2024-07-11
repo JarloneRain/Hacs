@@ -111,6 +111,39 @@ public partial class KeysForm : Form
         InitButtons();
     }
 
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        //   Due to a fxxking bizarre issue, launching KeysForm by listening to fxxking right-click actions
+        // causes the fxxking mouse button to temporarily become unresponsive.
+        //   You'll need to fxxking manually press the right mouse button again to restore its functionality.
+        //   Fxxking only Microsoft might know why this fxxking thing happens.
+        InputMessage.SendInputs([
+            new INPUT
+            {
+                type = InputMessage.INPUT_MOUSE,
+                U = new InputUnion
+                {
+                    mi = new MOUSEINPUT
+                    {
+                        dwFlags =InputMessage. MOUSEEVENTF_RIGHTDOWN
+                    }
+                }
+            },
+            new INPUT
+            {
+                type = InputMessage.INPUT_MOUSE,
+                U = new InputUnion
+                {
+                    mi = new MOUSEINPUT
+                    {
+                        dwFlags =InputMessage. MOUSEEVENTF_RIGHTUP
+                    }
+                }
+            }
+        ]);
+    }
+
     void InitButtons()
     {
         TriangleConfig triangleConfig = Program.KeysConfig[hexTriangle];
@@ -134,7 +167,7 @@ public partial class KeysForm : Form
                 {
                     // Wait for the window to close and return focus.
                     Thread.Sleep(250);
-                    KeyboardMessage.SendInputs(key.Inputs);
+                    InputMessage.SendInputs(key.Inputs);
                     Log($"Have sent keys:{triangleConfig.ModifierKeysText}+{key.Keys}");
                 })).Start();
 
