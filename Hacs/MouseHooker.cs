@@ -43,7 +43,7 @@ static partial class MouseHooker
     public static event MouseEventHandler? MiddleButtonDoubleClick;
     public static event MouseEventHandler? MouseWheel;
     public static event MouseEventHandler? MouseHWheel;
-    public static event MouseEventHandler? Unknown;
+    //public static event MouseEventHandler? Unknown;
     #endregion
 
     private const int WH_MOUSE_LL = 14;

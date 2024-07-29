@@ -36,9 +36,9 @@ Almost not implemented.
 
 ## TODO 
 
-* Fixed the issue where the mouse would lag after the KeysForm appears
+* ~~Fixed the issue where the mouse would lag after the KeysForm appears~~
 * ~~Implemented the function to send shortcut keys~~
 * Implemented the Home interface where users can configure shortcut keys
-* Add a switch to the menu of the tray icon
+* ~~Add a switch to the menu of the tray icon~~
 
 Wow~! Absolutely fantastic work!

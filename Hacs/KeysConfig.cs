@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 enum ModifierKeyEnum
 {
@@ -203,10 +204,11 @@ class KeyConfig
     public int OffsetY { get; set; }
     public string Description { get; set; } = "";
     [JsonIgnore]
+    [Browsable(false)]
     public Point Location => new()
     {
-        X = OffsetX + KeysForm.Length / 2 - HexButton.DefaultWidth / 2,
-        Y = OffsetY + KeysForm.Length / 2 - HexButton.DefaultHeight / 2
+        X = OffsetX + KeysForm.Length / 2 - QuirkyButtons.HexButton.DefaultWidth / 2,
+        Y = OffsetY + KeysForm.Length / 2 - QuirkyButtons.HexButton.DefaultHeight / 2
     };
 }
 
@@ -271,6 +273,4 @@ class KeysConfig
     {"ModifierKeys":5,"KeyConfigs":[]}
 ]
 """;
-
-
 }

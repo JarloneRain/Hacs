@@ -43,7 +43,5 @@
         }
 
         #endregion
-
-        private NotifyIcon notifyIcon1;
     }
 }

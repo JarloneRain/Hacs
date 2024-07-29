@@ -20,7 +20,7 @@ public class InteractionController
     KeysForm? keysForm;
 
     public bool IsRHolding { get; set; } = false;
-    Point rDownPos = new(0, 0);
+    Point rDownPos;
 
     public void OnMouseMove(int x, int y)
     {
