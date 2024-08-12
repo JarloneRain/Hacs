@@ -23,7 +23,7 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
+        ///  Required method for Designer support - do not modifyBtn
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()

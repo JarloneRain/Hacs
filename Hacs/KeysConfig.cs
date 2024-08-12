@@ -82,16 +82,16 @@ static partial class InputsGenerator
                 "9" => Keys.D9,
                 #endregion
                 #region numpad
-                "{num0}" => Keys.NumPad0,
-                "{num1}" => Keys.NumPad1,
-                "{num2}" => Keys.NumPad2,
-                "{num3}" => Keys.NumPad3,
-                "{num4}" => Keys.NumPad4,
-                "{num5}" => Keys.NumPad5,
-                "{num6}" => Keys.NumPad6,
-                "{num7}" => Keys.NumPad7,
-                "{num8}" => Keys.NumPad8,
-                "{num9}" => Keys.NumPad9,
+                "{num0}" or "{Num0}" or "{NUM0}" => Keys.NumPad0,
+                "{num1}" or "{Num1}" or "{NUM1}" => Keys.NumPad1,
+                "{num2}" or "{Num2}" or "{NUM2}" => Keys.NumPad2,
+                "{num3}" or "{Num3}" or "{NUM3}" => Keys.NumPad3,
+                "{num4}" or "{Num4}" or "{NUM4}" => Keys.NumPad4,
+                "{num5}" or "{Num5}" or "{NUM5}" => Keys.NumPad5,
+                "{num6}" or "{Num6}" or "{NUM6}" => Keys.NumPad6,
+                "{num7}" or "{Num7}" or "{NUM7}" => Keys.NumPad7,
+                "{num8}" or "{Num8}" or "{NUM8}" => Keys.NumPad8,
+                "{num9}" or "{Num9}" or "{NUM9}" => Keys.NumPad9,
                 #endregion
                 #region sign
                 "[" => Keys.OemOpenBrackets,

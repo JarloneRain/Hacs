@@ -11,13 +11,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
-public partial class LogForm : Form {
+public partial class LogForm : Form
+{
     readonly TextBox logBox;
     readonly System.Windows.Forms.Timer timer;
-    public LogForm() {
+    public LogForm()
+    {
         InitializeComponent();
 
-        logBox = new TextBox {
+        Icon = Resource.hacs;
+
+        logBox = new TextBox
+        {
             Multiline = true,
             ScrollBars = ScrollBars.Both,
             Dock = DockStyle.Fill,
@@ -25,17 +30,20 @@ public partial class LogForm : Form {
         };
         Controls.Add(logBox);
 
-        timer = new() {
+        timer = new()
+        {
             Interval = 1000
         };
-        timer.Tick += (_, _) => {
+        timer.Tick += (_, _) =>
+        {
             logBox.Text = File.ReadAllText(Logger.LogPath);
             logBox.SelectionStart = logBox.Text.Length;
             logBox.ScrollToCaret();
         };
     }
 
-    private void LogForm_Load(object sender, EventArgs e) {
+    private void LogForm_Load(object sender, EventArgs e)
+    {
         timer.Start();
     }
 

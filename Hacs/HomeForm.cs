@@ -4,22 +4,23 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
+// This part implement the constructor and notyfy icon.
 public partial class HomeForm : Form
 {
-    private readonly Icon hacsIcon;
-
+    const int DefaultClientWidth = 1600;
+    const int DefaultClientHeight = 1000;
     public HomeForm()
     {
         InitializeComponent();
-        hacsIcon = (Icon)(new ComponentResourceManager(typeof(HomeForm))).GetObject("hacs")!;
-        Icon = hacsIcon;
-        Width = 800;
-        Height = 500;
+
+        Icon = Resource.hacs;
+        ClientSize = new(DefaultClientWidth, DefaultClientHeight);
 
         InitNotifyIcon();
         InitContainer();
         InitButtons();
         InitDgv();
+        InitAddBtn();
         InitTriButtons();
 
 #if !DEBUG
@@ -79,7 +80,7 @@ public partial class HomeForm : Form
         notifyIcon = new NotifyIcon(components)
         {
             ContextMenuStrip = iconMenuStrip,
-            Icon = hacsIcon,
+            Icon = Resource.hacs,
             Text = "Hacs",
             Visible = true
         };
@@ -92,13 +93,39 @@ public partial class HomeForm : Form
         };
     }
     #endregion
+    private void ShowHome()
+    {
+        WindowState = FormWindowState.Normal;
+        ShowInTaskbar = true;
+    }
+    public void HomeForm_Load(object? s, EventArgs e) { }
+}
 
+// This part implement the main interface.
+public partial class HomeForm : Form
+{
+    HexTriangleEnum curTri;
+    HexTriangleEnum CurTri
+    {
+        get => curTri;
+        set
+        {
+            curTri = value;
+            hsc.Panel1.BackColor = HexForm.TriangleColor[value];
+            dgv.DataSource = Program.KeysConfig.TriangleConfigs[(int)value].KeyConfigs;
+        }
+    }
     #region container
-    readonly SplitContainer vsc = new()
+    readonly SplitContainer vsc0 = new()
     {
         Dock = DockStyle.Fill,
         Orientation = Orientation.Horizontal,
         FixedPanel = FixedPanel.Panel1
+    }, vsc1 = new()
+    {
+        Dock = DockStyle.Fill,
+        Orientation = Orientation.Horizontal,
+        FixedPanel = FixedPanel.Panel2
     }, hsc = new()
     {
         Dock = DockStyle.Fill,
@@ -107,29 +134,24 @@ public partial class HomeForm : Form
     };
     void InitContainer()
     {
-        vsc.Panel1.Controls.Add(hsc);
-        Controls.Add(vsc);
+        Controls.Add(vsc0);
+        vsc0.Panel1.Controls.Add(hsc);
+        vsc0.Panel2.Controls.Add(vsc1);
 
         hsc.SplitterDistance = 2 * HexWhellRadius;
-        vsc.SplitterDistance = 2 * HexWhellRadius;
+        vsc0.SplitterDistance = 2 * HexWhellRadius;
+        vsc1.SplitterDistance = ClientSize.Height - 2 * HexWhellRadius - DefaultButtonHeight;
     }
+
+    Panel HexWhellPanel => hsc.Panel1;
+    Panel FuncPanel => hsc.Panel2;
+    Panel DgvPanel => vsc1.Panel1;
+    Panel AddBtnPanel => vsc1.Panel2;
     #endregion
 
-    //HexTriangleEnum curTri = HexTriangleEnum.UR;
-
-    HexTriangleEnum CurTri
-    {
-        set
-        {
-            hsc.Panel1.BackColor = HexForm.TriangleColor[value];
-            dgv.DataSource = Program.KeysConfig.TriangleConfigs[(int)value].KeyConfigs;
-        }
-    }
-    #region triangle buttons
+    #region hex whell
     const int HexWhellRadius = 100;
     const int HexWhellTriRadius = (int)(HexWhellRadius * 0.577/*sqrt(3)/2*/);
-    //const int HexWhellCenterX = 100;
-    //const int HexWhellCenterY = 100;
     readonly Button[] triButtons = new Button[6];
     void InitTriButtons()
     {
@@ -147,25 +169,55 @@ public partial class HomeForm : Form
                 ForeColor = Color.White,
                 Rotate = Math.PI / 2 + (int)tri * Math.PI / 3,
             };
-            triButtons[(int)tri].Click += (_, _) =>
-            {
-                CurTri = tri;
-            };
-            hsc.Panel1.Controls.Add(triButtons[(int)tri]);
+            triButtons[(int)tri].Click += (_, _) => CurTri = tri;
+            HexWhellPanel.Controls.Add(triButtons[(int)tri]);
         }
         CurTri = HexTriangleEnum.DL;
     }
     #endregion
+
+    #region buttons
+    const int DefaultButtonWidth = 160;
+    const int DefaultButtonHeight = HexWhellRadius;
+    const int ButtonMargin = 20;
+    readonly Dictionary<string, Button> buttons = [];
+    readonly string[] buttonsName = ["Help", "Logs"];
+    void InitButtons()
+    {
+        for(int i = 0; i < buttonsName.Length; i++)
+        {
+            var curName = buttonsName[i];
+            var btn = new Button
+            {
+                Location = new(i * (DefaultButtonWidth + 2 * ButtonMargin) + ButtonMargin, DefaultButtonHeight / 2),
+                Text = curName,
+                Width = DefaultButtonWidth,
+                Height = DefaultButtonHeight
+            };
+            buttons[curName] = btn;
+            FuncPanel.Controls.Add(btn);
+        }
+
+        buttons["Help"].Click += (_, _) => Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://github.com/JarloneRain/Hacs",
+            UseShellExecute = true
+        });
+        buttons["Logs"].Click += (_, _) => new LogForm().Show();
+    }
+    #endregion
+
     #region table
     readonly DataGridView dgv = new()
     {
+        ReadOnly = true,
         RowHeadersVisible = false,
         Dock = DockStyle.Fill,
         AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     };
     void InitDgv()
     {
-        vsc.Panel2.Controls.Add(dgv);
+        DgvPanel.Controls.Add(dgv);
         dgv.DataSource = Program.KeysConfig.TriangleConfigs[(int)HexTriangleEnum.DL].KeyConfigs;
 
         foreach(var colName in new[] { "Modify", "Delete" })
@@ -179,56 +231,64 @@ public partial class HomeForm : Form
 
         dgv.CellContentClick += (_, e) =>
         {
-            /* Copilot told me that "Modify" and "Delete" should be the last two columns，
+            /* GitHub Copilot told me that "Modify" and "Delete" should be the last two columns，
             ** but in actual testing, they are the 0th and 1st columns.
             */
-
+            var tri = Program.KeysConfig.TriangleConfigs[(int)CurTri];
             // Modify
             if(e.ColumnIndex == 0)
             {
-                MessageBox.Show($"{e.ColumnIndex} {e.RowIndex}");
+                new ModifyKeyConfigForm(tri.KeyConfigs[e.RowIndex], k =>
+                {
+                    k.GenInputs(tri.ModifierKeys);
+                    tri.KeyConfigs[e.RowIndex] = k;
+                    Program.KeysConfig.Save();
+                }).ShowDialog();
+                dgv.Refresh();
             }
             // Delete
-            if(e.ColumnIndex == 1)
+            if(e.ColumnIndex == 1 && MessageBox.Show("Please confirm that you want to delete the shortcut key.", "Reassurance",
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                MessageBox.Show($"{e.ColumnIndex} {e.RowIndex}");
+                tri.KeyConfigs = tri.KeyConfigs.Where((_, i) => i != e.RowIndex).ToArray();
+                Program.KeysConfig.Save();
+                // refresh
+                CurTri = curTri;
             }
         };
     }
     #endregion
 
-    #region buttons
-    readonly Dictionary<string, Button> buttons = [];
-    readonly string[] buttonsName = ["Help", "Logs"];
-    void InitButtons()
+
+    #region the add button
+    const int AddBtnMargin = 50;
+    readonly Button addBtn = new()
     {
-        for(int i = 0; i < buttonsName.Length; i++)
+        Text = "Add",
+        Location = new Point(AddBtnMargin, 0),
+        Height = DefaultButtonHeight,
+        Width = 1600 - 2 * AddBtnMargin
+    };
+    void InitAddBtn()
+    {
+        AddBtnPanel.Controls.Add(addBtn);
+        addBtn.Click += (_, _) =>
         {
-            var curName = buttonsName[i];
-            var btn = new Button
+            new AddKeyConfigForm(k =>
             {
-                Location = new(200 * i + 20, 50),
-                Text = curName,
-                Width = 160,
-                Height = 100
-            };
-            buttons[curName] = btn;
-            hsc.Panel2.Controls.Add(btn);
-        }
+                var tri = Program.KeysConfig.TriangleConfigs[(int)CurTri];
+                k.GenInputs(tri.ModifierKeys);
 
-        buttons["Help"].Click += (_, _) => Process.Start(new ProcessStartInfo
-        {
-            FileName = "https://github.com/JarloneRain/Hacs",
-            UseShellExecute = true
-        });
-        buttons["Logs"].Click += (_, _) => new LogForm().Show();
+                tri.KeyConfigs = [.. tri.KeyConfigs, k];
+
+                Program.KeysConfig.Save();
+            }).ShowDialog();
+            // refresh
+            CurTri = curTri;
+        };
+
+        Resize += (_, _) => addBtn.Width = AddBtnPanel.Width - 2 * AddBtnMargin;
     }
-
     #endregion
-    private void ShowHome()
-    {
-        WindowState = FormWindowState.Normal;
-        ShowInTaskbar = true;
-    }
-    public void HomeForm_Load(object? s, EventArgs e) { }
+
 }
