@@ -67,18 +67,6 @@ public partial class HexForm : Form
         };
     }
 
-
-    //readonly Timer timer = new() {
-    //    Interval = 1000
-    //};
     private void HexForm_Load(object sender, EventArgs e)
-    {
-        //int i = 0;
-        //timer.Tick += (_, _) => {
-        //    Location = new Point(i * 1000, i * 1000);
-        //    i++;
-        //    Refresh();
-        //};
-        //timer.Start();
-    }
+    { }
 }

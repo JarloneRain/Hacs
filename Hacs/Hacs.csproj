@@ -7,10 +7,15 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>resources\hacs.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="resources\hex.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="resources\hacs.ico" />
   </ItemGroup>
 
   <ItemGroup>
